@@ -13,3 +13,6 @@ add_test(qa_fm_sum "/bin/sh" "/home/cam/radio/gr-MyRadio/build/python/qa_fm_sum_
 add_test(qa_fm_square "/bin/sh" "/home/cam/radio/gr-MyRadio/build/python/qa_fm_square_test.sh")
 add_test(qa_fm_compare "/bin/sh" "/home/cam/radio/gr-MyRadio/build/python/qa_fm_compare_test.sh")
 add_test(qa_cdma_decode "/bin/sh" "/home/cam/radio/gr-MyRadio/build/python/qa_cdma_decode_test.sh")
+add_test(qa_phase_calc "/bin/sh" "/home/cam/radio/gr-MyRadio/build/python/qa_phase_calc_test.sh")
+add_test(qa_freq_calc "/bin/sh" "/home/cam/radio/gr-MyRadio/build/python/qa_freq_calc_test.sh")
+add_test(qa_time_calc "/bin/sh" "/home/cam/radio/gr-MyRadio/build/python/qa_time_calc_test.sh")

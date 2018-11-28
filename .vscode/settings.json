@@ -1,0 +1,6 @@
+{
+  "python.linting.enabled": false,
+  "prettier.printWidth": 160,
+  "python.formatting.autopep8Args": ["--max-line-length", "160"],
+  "python.formatting.provider": "autopep8"
+}

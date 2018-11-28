@@ -48,6 +48,9 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
     "/home/cam/radio/gr-MyRadio/grc/MyRadio_fm_square.xml"
     "/home/cam/radio/gr-MyRadio/grc/MyRadio_fm_compare.xml"
     "/home/cam/radio/gr-MyRadio/grc/MyRadio_cdma_decode.xml"
+    "/home/cam/radio/gr-MyRadio/grc/MyRadio_phase_calc.xml"
+    "/home/cam/radio/gr-MyRadio/grc/MyRadio_freq_calc.xml"
+    "/home/cam/radio/gr-MyRadio/grc/MyRadio_time_calc.xml"
     )
 endif()
 

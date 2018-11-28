@@ -25,5 +25,8 @@ install(FILES
     MyRadio_fm_sum.xml
     MyRadio_fm_square.xml
     MyRadio_fm_compare.xml
-    MyRadio_cdma_decode.xml DESTINATION share/gnuradio/grc/blocks
+    MyRadio_cdma_decode.xml
+    MyRadio_phase_calc.xml
+    MyRadio_freq_calc.xml
+    MyRadio_time_calc.xml DESTINATION share/gnuradio/grc/blocks
 )

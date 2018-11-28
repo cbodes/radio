@@ -31,19 +31,14 @@ class cpfsk(gr.basic_block):
     """
     data = np.array([])
 
-    def __init__(self, sample_rate, w_bandwidth, w_carrier):
+    def __init__(self, sample_rate):
         gr.basic_block.__init__(self,
                                 name="cpfsk",
-                                in_sig=[np.float32],
+                                in_sig=[np.float32, np.float32],
                                 out_sig=[np.complex64])
-        self.w_b = w_bandwidth * np.pi
-        self.w_c = w_carrier * np.pi * 2.
-        self.amplitude = 1.
-        self.cur_phase = 0.
-        self.cur_t = 0.
-        self.smpl_rate = sample_rate
-        self.prev_freq = 0.
-        self.tstep = 1. / self.smpl_rate
+        self.tstep = 1. / sample_rate
+        self.times = np.arange(0, self.tstep * 16384, self.tstep, dtype=np.float64)
+        self.amplitude = 1
 
     def forecast(self, noutput_items, ninput_items_required):
         # setup size of input_items[i] for work call
@@ -51,19 +46,14 @@ class cpfsk(gr.basic_block):
             ninput_items_required[i] = noutput_items
 
     def general_work(self, input_items, output_items):
-        in0 = input_items[0][0]
-        myFreq = (in0 * self.w_b + self.w_c)
-        self.cur_phase = self.cur_phase + (self.cur_t * (self.prev_freq - myFreq))
-        mySample = self.amplitude * np.exp(1j * (myFreq * self.cur_t + self.cur_phase))
-        output_items[0][:1] = mySample
-        self.data = np.append(self.data, mySample)
-        self.cur_t += self.tstep
-        self.prev_freq = myFreq
-        self.consume(0, 1)
-        return 1
-        # output_items[0][:] = np.exp(input_items[0][:len(output_items[0])] * 1j)
-        # self.consume(0, len(output_items[0]))
-        # return len(output_items[0])
+        in0 = input_items[0][:len(output_items[0])]
+        in1 = input_items[1][:len(output_items[0])]
+        output_items[0][:] = self.amplitude * np.exp(1j * (in0 * self.times[:len(output_items[0])] + in1))
+        curT = self.times[len(output_items[0])-1] + self.tstep
+        self.times += curT - self.times[0]
+        self.consume(0, len(output_items[0]))
+        self.consume(1, len(output_items[0]))
+        return len(output_items[0])
 
 
 # !/usr/bin/env python

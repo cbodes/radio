@@ -40,4 +40,7 @@ from fm_sum import fm_sum
 from fm_square import fm_square
 from fm_compare import fm_compare
 from cdma_decode import cdma_decode
+from phase_calc import phase_calc
+from freq_calc import freq_calc
+from time_calc import time_calc
 #

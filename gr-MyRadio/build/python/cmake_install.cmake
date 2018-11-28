@@ -49,6 +49,9 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
     "/home/cam/radio/gr-MyRadio/python/fm_square.py"
     "/home/cam/radio/gr-MyRadio/python/fm_compare.py"
     "/home/cam/radio/gr-MyRadio/python/cdma_decode.py"
+    "/home/cam/radio/gr-MyRadio/python/phase_calc.py"
+    "/home/cam/radio/gr-MyRadio/python/freq_calc.py"
+    "/home/cam/radio/gr-MyRadio/python/time_calc.py"
     )
 endif()
 
@@ -64,6 +67,9 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
     "/home/cam/radio/gr-MyRadio/build/python/fm_square.pyc"
     "/home/cam/radio/gr-MyRadio/build/python/fm_compare.pyc"
     "/home/cam/radio/gr-MyRadio/build/python/cdma_decode.pyc"
+    "/home/cam/radio/gr-MyRadio/build/python/phase_calc.pyc"
+    "/home/cam/radio/gr-MyRadio/build/python/freq_calc.pyc"
+    "/home/cam/radio/gr-MyRadio/build/python/time_calc.pyc"
     "/home/cam/radio/gr-MyRadio/build/python/__init__.pyo"
     "/home/cam/radio/gr-MyRadio/build/python/rrc_filter.pyo"
     "/home/cam/radio/gr-MyRadio/build/python/cpfsk.pyo"
@@ -74,6 +80,9 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
     "/home/cam/radio/gr-MyRadio/build/python/fm_square.pyo"
     "/home/cam/radio/gr-MyRadio/build/python/fm_compare.pyo"
     "/home/cam/radio/gr-MyRadio/build/python/cdma_decode.pyo"
+    "/home/cam/radio/gr-MyRadio/build/python/phase_calc.pyo"
+    "/home/cam/radio/gr-MyRadio/build/python/freq_calc.pyo"
+    "/home/cam/radio/gr-MyRadio/build/python/time_calc.pyo"
     )
 endif()
 

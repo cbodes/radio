@@ -24,7 +24,7 @@ class MyRadio (gr.top_block):
         self.bitstream = bitstream
         self.cdma_code = [1, 1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -
                           1, -1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1]
-        self.sample_rate = 2000000
+        self.sample_rate = 5000000
         self.center_f = 100e6
         self.bandwidth = 10000
         self.freq_1 = 1000
@@ -40,13 +40,16 @@ class MyRadio (gr.top_block):
 
         self.time_sink = qtgui.time_sink_c(2000, self.sample_rate, "Time")
 
-        self.lp_taps1 = filter.firdes.low_pass(20, self.sample_rate,  self.bandwidth,  10000)
+        self.lp_taps1 = filter.firdes.low_pass(
+            20, self.sample_rate,  self.bandwidth,  10000)
 
-        self.lp_filt1 = filter.fir_filter_ccf(int(self.sample_rate / self.mod_rate), self.lp_taps1)
+        self.lp_filt1 = filter.fir_filter_ccf(
+            int(self.sample_rate / self.mod_rate), self.lp_taps1)
 
         self.rx_test = cdmarx()
 
-        self.sdr_source = osmosdr.source(args="hackrf=0000000000000000325866e6299d8023")
+        self.sdr_source = osmosdr.source(
+            args="hackrf=0000000000000000325866e6299d8023")
         self.sdr_source.set_sample_rate(self.sample_rate)
         self.sdr_source.set_center_freq(self.center_f)
         self.sdr_source.set_freq_corr(0, 0)
@@ -59,7 +62,8 @@ class MyRadio (gr.top_block):
         self.sdr_source.set_antenna("", 0)
         self.sdr_source.set_bandwidth(0, 0)
 
-        self.fm_demod = fm_demod(self.mod_rate, self.samples_per_symbol, self.freq_1, self.freq_0)
+        self.fm_demod = fm_demod(
+            self.mod_rate, self.samples_per_symbol, self.freq_1, self.freq_0)
 
         self.fm_sum = fm_sum(self.samples_per_symbol)
 
@@ -86,7 +90,8 @@ class MyRadio (gr.top_block):
 
         pyWin1 = sip.wrapinstance(self.qtsnk.pyqwidget(), QtWidgets.QWidget)
         pyWin1.show()
-        pyWin2 = sip.wrapinstance(self.time_sink.pyqwidget(), QtWidgets.QWidget)
+        pyWin2 = sip.wrapinstance(
+            self.time_sink.pyqwidget(), QtWidgets.QWidget)
         pyWin2.show()
 
     def getResultData(self):

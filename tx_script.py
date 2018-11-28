@@ -1,5 +1,5 @@
 from gnuradio import gr
-from MyRadio import cdmagen, cdmarx, rrc_filter, cpfsk
+from MyRadio import cdmagen, cdmarx, rrc_filter, cpfsk, freq_calc, phase_calc
 from gnuradio import blocks
 
 import matplotlib.pyplot as plt
@@ -23,10 +23,10 @@ class MyRadio (gr.top_block):
         self.bitstream = bitstream
         self.cdma_code = [1, 1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -
                           1, -1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1]
-        self.sample_rate = 1000000
+        self.sample_rate = 5000000
         self.center_f = 10000
         self.bandwidth = 10000
-        self.bit_width = .02
+        self.bit_width = .0001
 
         self.samples_per_symbol = self.bit_width * self.sample_rate
 
@@ -50,13 +50,15 @@ class MyRadio (gr.top_block):
         # self.connect (self.rrc_filt, self.cdma_rx)
 
         self.rrc_taps = filter.firdes.root_raised_cosine(
-            self.samples_per_symbol, self.samples_per_symbol, 1, .5, 100)
+            self.samples_per_symbol, self.samples_per_symbol, 1, .5, int(20 * self.samples_per_symbol))
 
-        self.rrc_filt = filter.interp_fir_filter_fff(int(self.samples_per_symbol), self.rrc_taps)
+        self.rrc_filt = filter.interp_fir_filter_fff(
+            int(self.samples_per_symbol), self.rrc_taps)
 
         self.short_to_float = blocks.short_to_float()
 
-        self.sdr_sink = osmosdr.sink(args="hackrf=0000000000000000325866e6299d8023")
+        self.sdr_sink = osmosdr.sink(
+            args="hackrf=0000000000000000325866e6299d8023")
         self.sdr_sink.set_sample_rate(self.sample_rate)
 
         self.file_sink = blocks.file_sink(8, "output.txt")
@@ -66,11 +68,15 @@ class MyRadio (gr.top_block):
 
         self.vec_stream = blocks.vector_to_stream(2, len(self.encoded_data))
 
-        self.cpfsk_mod = cpfsk(self.sample_rate, self.bandwidth, self.center_f)
+        self.cpfsk_mod = cpfsk(self.sample_rate)
 
         self.thr = blocks.throttle(gr.sizeof_gr_complex, self.sample_rate)
 
         self.conv = blocks.complex_to_float()
+
+        self.freq_calc = freq_calc(self.sample_rate, self.bandwidth, self.center_f)
+
+        self.phase_calc = phase_calc(self.sample_rate)
 
         Rs = 1
         fftsize = 2048
@@ -83,17 +89,22 @@ class MyRadio (gr.top_block):
         self.connect(self.vec_source, self.vec_stream)
         self.connect(self.vec_stream, self.short_to_float)
         self.connect(self.short_to_float, self.rrc_filt)
-        self.connect(self.rrc_filt, self.cpfsk_mod)
+        self.connect(self.rrc_filt, self.freq_calc)
+        self.connect(self.freq_calc, self.phase_calc)
+        self.connect((self.phase_calc, 0), (self.cpfsk_mod, 1))
+        self.connect((self.freq_calc, 0), (self.cpfsk_mod, 0))
         self.connect(self.cpfsk_mod, self.thr)
         self.connect(self.thr, self.time_sink)
         self.connect(self.thr, self.qtsnk)
         self.connect(self.thr, self.sdr_sink)
 
-        self.lp_filt1 = filter.firdes.low_pass(20, self.sample_rate,  self.bandwidth,  10000)
+        self.lp_filt1 = filter.firdes.low_pass(
+            20, self.sample_rate,  self.bandwidth,  10000)
 
         pyWin1 = sip.wrapinstance(self.qtsnk.pyqwidget(), QtWidgets.QWidget)
         pyWin1.show()
-        pyWin2 = sip.wrapinstance(self.time_sink.pyqwidget(), QtWidgets.QWidget)
+        pyWin2 = sip.wrapinstance(
+            self.time_sink.pyqwidget(), QtWidgets.QWidget)
         pyWin2.show()
 
     def getResultData(self):
@@ -113,10 +124,9 @@ if __name__ == '__main__':
     # print len(data)
     # N = len(data)
     # T = test.bit_width * len(test.bitstream) * 32 / len(data)
-
-    # plt.plot(test.cpfsk_mod.data[:10000])
+    plt.plot(test.cpfsk_mod.data)
     # # plt.plot(data)
-    # plt.show()
+    plt.show()
     # yf = fft(data)
     # xf = fftfreq(N, T)
     # xf = fftshift(xf)
