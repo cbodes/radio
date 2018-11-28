@@ -43,4 +43,5 @@ from cdma_decode import cdma_decode
 from phase_calc import phase_calc
 from freq_calc import freq_calc
 from time_calc import time_calc
+from fm_multiply import fm_multiply
 #

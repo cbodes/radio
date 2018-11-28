@@ -41,7 +41,8 @@ class cdma_decode(gr.basic_block):
             ninput_items_required[i] = noutput_items
 
     def general_work(self, input_items, output_items):
-        output_items[0][:] = np.where(np.dot(input_items[0], self.cdma_code) > 0, 1, 0)
+        output_items[0][:] = np.where(np.dot(input_items[0][:len(output_items[0])], self.cdma_code) > 0, 1, 0)
+        #print input_items[0]
         self.consume(0, len(input_items[0]))
         # self.consume_each(len(input_items[0]))
         return len(output_items[0])

@@ -42,7 +42,8 @@ GR_PYTHON_INSTALL(
     cdma_decode.py
     phase_calc.py
     freq_calc.py
-    time_calc.py DESTINATION ${GR_PYTHON_DIR}/MyRadio
+    time_calc.py
+    fm_multiply.py DESTINATION ${GR_PYTHON_DIR}/MyRadio
 )
 
 ########################################################################
@@ -64,3 +65,4 @@ GR_ADD_TEST(qa_cdma_decode ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_c
 GR_ADD_TEST(qa_phase_calc ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_phase_calc.py)
 GR_ADD_TEST(qa_freq_calc ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_freq_calc.py)
 GR_ADD_TEST(qa_time_calc ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_time_calc.py)
+GR_ADD_TEST(qa_fm_multiply ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_fm_multiply.py)

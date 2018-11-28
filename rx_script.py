@@ -1,5 +1,5 @@
 from gnuradio import gr
-from MyRadio import cdmarx, fm_sum, fm_demod, fm_square, fm_compare, cdma_decode
+from MyRadio import cdmarx, fm_sum, fm_demod, fm_square, fm_compare, cdma_decode, fm_multiply
 from gnuradio import blocks
 
 import matplotlib.pyplot as plt
@@ -24,14 +24,14 @@ class MyRadio (gr.top_block):
         self.bitstream = bitstream
         self.cdma_code = [1, 1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -
                           1, -1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1]
-        self.sample_rate = 5000000
-        self.mod_fc = 10000
-        self.rf_fc = 915e6 - self.mod_fc
-        self.bandwidth = 10000
-        self.freq_1 = mod_fc + bandwidth / 2.
-        self.freq_0 = mod_fc - bandwidth / 2.
+        self.sample_rate = 10e6
+        self.bandwidth = 150e3
+        self.mod_fc = self.bandwidth
+        self.rf_fc = 101.7e6 - self.mod_fc
+        self.freq_1 = self.mod_fc + self.bandwidth / 2.
+        self.freq_0 = self.mod_fc - self.bandwidth / 2.
         self.bit_width = .001
-        self.mod_rate = 500e3
+        self.mod_rate = 1000e3
         self.samples_per_symbol = self.mod_rate * self.bit_width
 
         fftsize = 2048
@@ -39,10 +39,12 @@ class MyRadio (gr.top_block):
         self.qtsnk = qtgui.sink_c(fftsize, 5, self.rf_fc, self.bandwidth * 2, "Complex Signal Example",
                                   True, True, True, True)
 
+        self.conv = blocks.complex_to_float()
+
         self.time_sink = qtgui.time_sink_c(2000, self.sample_rate, "Time")
 
         self.lp_taps1 = filter.firdes.low_pass(
-            20, self.sample_rate,  self.bandwidth,  10000)
+            20, self.sample_rate,  self.mod_fc * 2,  10000)
 
         self.lp_filt1 = filter.fir_filter_ccf(
             int(self.sample_rate / self.mod_rate), self.lp_taps1)
@@ -66,6 +68,11 @@ class MyRadio (gr.top_block):
         self.fm_demod = fm_demod(
             self.mod_rate, self.samples_per_symbol, self.freq_1, self.freq_0)
 
+        self.fm_multiplyr1 = fm_multiply(self.mod_rate, self.freq_1)
+        self.fm_multiplyi1 = fm_multiply(self.mod_rate, self.freq_1)
+        self.fm_multiplyr0 = fm_multiply(self.mod_rate, self.freq_0)
+        self.fm_multiplyi0 = fm_multiply(self.mod_rate, self.freq_0)
+
         self.fm_sum = fm_sum(self.samples_per_symbol)
 
         self.fm_square = fm_square()
@@ -76,13 +83,21 @@ class MyRadio (gr.top_block):
 
         self.cdma_decode = cdma_decode(self.cdma_code)
 
-        self.connect(self.sdr_source, self.qtsnk)
         self.connect(self.sdr_source, self.lp_filt1)
-        self.connect(self.lp_filt1, self.fm_demod)
-        for i in np.arange(0, 4, 1):
-            self.connect((self.fm_demod, i), (self.fm_sum, i))
-            self.connect((self.fm_sum, i), (self.fm_square, i))
-
+        self.connect(self.lp_filt1, self.conv)
+        self.connect(self.sdr_source, self.qtsnk)
+        self.connect((self.conv, 0), self.fm_multiplyr1)
+        self.connect((self.conv, 1), self.fm_multiplyi1)
+        self.connect((self.conv, 0), self.fm_multiplyr0)
+        self.connect((self.conv, 1), self.fm_multiplyi0)
+        self.connect(self.fm_multiplyr1, (self.fm_sum, 0))
+        self.connect(self.fm_multiplyi1, (self.fm_sum, 1))
+        self.connect(self.fm_multiplyr0, (self.fm_sum, 2))
+        self.connect(self.fm_multiplyi0, (self.fm_sum, 3))
+        self.connect((self.fm_sum, 0), (self.fm_square, 0))
+        self.connect((self.fm_sum, 1), (self.fm_square, 1))
+        self.connect((self.fm_sum, 2), (self.fm_square, 2))
+        self.connect((self.fm_sum, 3), (self.fm_square, 3))
         self.connect((self.fm_square, 0), (self.fm_compare, 0))
         self.connect((self.fm_square, 1), (self.fm_compare, 1))
         self.connect(self.fm_compare, self.cdma_vecstack)
@@ -91,9 +106,9 @@ class MyRadio (gr.top_block):
 
         pyWin1 = sip.wrapinstance(self.qtsnk.pyqwidget(), QtWidgets.QWidget)
         pyWin1.show()
-        pyWin2 = sip.wrapinstance(
-            self.time_sink.pyqwidget(), QtWidgets.QWidget)
-        pyWin2.show()
+        # pyWin2 = sip.wrapinstance(
+        #     self.time_sink.pyqwidget(), QtWidgets.QWidget)
+        # pyWin2.show()
 
     def getResultData(self):
         return self.encoded_data

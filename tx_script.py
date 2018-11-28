@@ -23,9 +23,9 @@ class MyRadio (gr.top_block):
         self.bitstream = bitstream
         self.cdma_code = [1, 1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -
                           1, -1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1]
-        self.sample_rate = 5000000
-        self.mod_fc = 10000
+        self.sample_rate = 5e6
         self.bandwidth = 10000
+        self.mod_fc = self.bandwidth
         self.rf_fc = 915e3-self.mod_fc
         self.bit_width = .0001
 
@@ -126,9 +126,9 @@ if __name__ == '__main__':
     # print len(data)
     # N = len(data)
     # T = test.bit_width * len(test.bitstream) * 32 / len(data)
-    plt.plot(test.cpfsk_mod.data)
-    # # plt.plot(data)
-    plt.show()
+    # plt.plot(test.cpfsk_mod.data)
+    # plt.plot(data)
+    # plt.show()
     # yf = fft(data)
     # xf = fftfreq(N, T)
     # xf = fftshift(xf)

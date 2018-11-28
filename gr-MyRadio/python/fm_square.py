@@ -41,7 +41,8 @@ class fm_square(gr.basic_block):
 
     def general_work(self, input_items, output_items):
         # self.consume_each(len(input_items[0]))
-        output_items[0][:] = np.add(np.square(input_items[0][:]), np.square(input_items[1][:]))[:len(output_items[0])]
-        output_items[1][:] = np.add(np.square(input_items[2][:]), np.square(input_items[3][:]))[:len(output_items[1])]
+        nitems = len(output_items[0])
+        output_items[0][:] = np.add(np.square(input_items[0][:nitems]), np.square(input_items[1][:nitems]))
+        output_items[1][:] = np.add(np.square(input_items[2][:nitems]), np.square(input_items[3][:nitems]))
         self.consume_each(len(output_items[0]))
         return len(output_items[0])

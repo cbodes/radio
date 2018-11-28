@@ -27,10 +27,10 @@
 /home/cam/radio/gr-MyRadio/build/swig/CMakeFiles/install/local.dir
 /home/cam/radio/gr-MyRadio/build/swig/CMakeFiles/rebuild_cache.dir
 /home/cam/radio/gr-MyRadio/build/swig/CMakeFiles/install.dir
-/home/cam/radio/gr-MyRadio/build/python/CMakeFiles/install/strip.dir
 /home/cam/radio/gr-MyRadio/build/python/CMakeFiles/install/local.dir
 /home/cam/radio/gr-MyRadio/build/python/CMakeFiles/test.dir
-/home/cam/radio/gr-MyRadio/build/python/CMakeFiles/pygen_python_0d733.dir
+/home/cam/radio/gr-MyRadio/build/python/CMakeFiles/install/strip.dir
+/home/cam/radio/gr-MyRadio/build/python/CMakeFiles/pygen_python_21cdf.dir
 /home/cam/radio/gr-MyRadio/build/python/CMakeFiles/list_install_components.dir
 /home/cam/radio/gr-MyRadio/build/python/CMakeFiles/edit_cache.dir
 /home/cam/radio/gr-MyRadio/build/python/CMakeFiles/rebuild_cache.dir

@@ -23,16 +23,19 @@ import numpy as np
 from gnuradio import gr
 
 
-class fm_compare(gr.basic_block):
+class fm_multiply(gr.basic_block):
     """
-    docstring for block fm_compare
+    docstring for block fm_demod
     """
 
-    def __init__(self):
+    def __init__(self, sample_rate, f):
         gr.basic_block.__init__(self,
-                                name="fm_compare",
-                                in_sig=[np.float32, np.float32],
-                                out_sig=[np.int8])
+                                name="fm_demod",
+                                in_sig=[np.float32],
+                                out_sig=[np.float32])
+        self.num_samps = 2**14
+        self.w = 2 * np.pi * f
+        self.t = np.arange(0, self.num_samps * 1. / sample_rate, 1. / sample_rate, dtype=np.float64)
 
     def forecast(self, noutput_items, ninput_items_required):
         # setup size of input_items[i] for work call
@@ -40,7 +43,9 @@ class fm_compare(gr.basic_block):
             ninput_items_required[i] = noutput_items
 
     def general_work(self, input_items, output_items):
-        output_items[0][:] = np.where(input_items[0][:] > input_items[1][:], 1, -1)[:len(output_items[0])]
-        self.consume_each(len(output_items[0]))
 
+        in0 = input_items[0][:len(output_items[0])]
+        self.consume(0, len(output_items[0]))
+        output_items[0][:] = np.multiply(in0, np.cos(self.w * self.t[:len(output_items[0])]))[:len(output_items[0])]
+        self.t += self.t[len(output_items[0])-1] - self.t[0]
         return len(output_items[0])
