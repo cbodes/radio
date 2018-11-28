@@ -24,8 +24,9 @@ class MyRadio (gr.top_block):
         self.cdma_code = [1, 1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -
                           1, -1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1]
         self.sample_rate = 5000000
-        self.center_f = 10000
+        self.mod_fc = 10000
         self.bandwidth = 10000
+        self.rf_fc = 915e3-self.mod_fc
         self.bit_width = .0001
 
         self.samples_per_symbol = self.bit_width * self.sample_rate
@@ -60,6 +61,7 @@ class MyRadio (gr.top_block):
         self.sdr_sink = osmosdr.sink(
             args="hackrf=0000000000000000325866e6299d8023")
         self.sdr_sink.set_sample_rate(self.sample_rate)
+        self.sdr_sink.set_center_freq(self.rf_fc)
 
         self.file_sink = blocks.file_sink(8, "output.txt")
 
@@ -74,14 +76,14 @@ class MyRadio (gr.top_block):
 
         self.conv = blocks.complex_to_float()
 
-        self.freq_calc = freq_calc(self.sample_rate, self.bandwidth, self.center_f)
+        self.freq_calc = freq_calc(self.sample_rate, self.bandwidth, self.mod_fc)
 
         self.phase_calc = phase_calc(self.sample_rate)
 
         Rs = 1
         fftsize = 2048
         self.qapp = QtWidgets.QApplication(sys.argv)
-        self.qtsnk = qtgui.sink_c(fftsize, 5, self.center_f, self.bandwidth * 2, "Complex Signal Example",
+        self.qtsnk = qtgui.sink_c(fftsize, 5, self.mod_fc, self.bandwidth * 2, "Complex Signal Example",
                                   True, True, True, True)
 
         self.time_sink = qtgui.time_sink_c(2000, self.sample_rate, "Time")

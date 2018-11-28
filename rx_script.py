@@ -25,17 +25,18 @@ class MyRadio (gr.top_block):
         self.cdma_code = [1, 1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -
                           1, -1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1, -1, -1, -1, -1]
         self.sample_rate = 5000000
-        self.center_f = 100e6
+        self.mod_fc = 10000
+        self.rf_fc = 915e6 - self.mod_fc
         self.bandwidth = 10000
-        self.freq_1 = 1000
-        self.freq_0 = 500
+        self.freq_1 = mod_fc + bandwidth / 2.
+        self.freq_0 = mod_fc - bandwidth / 2.
         self.bit_width = .001
         self.mod_rate = 500e3
         self.samples_per_symbol = self.mod_rate * self.bit_width
 
         fftsize = 2048
         self.qapp = QtWidgets.QApplication(sys.argv)
-        self.qtsnk = qtgui.sink_c(fftsize, 5, self.center_f, self.bandwidth * 2, "Complex Signal Example",
+        self.qtsnk = qtgui.sink_c(fftsize, 5, self.rf_fc, self.bandwidth * 2, "Complex Signal Example",
                                   True, True, True, True)
 
         self.time_sink = qtgui.time_sink_c(2000, self.sample_rate, "Time")
@@ -51,7 +52,7 @@ class MyRadio (gr.top_block):
         self.sdr_source = osmosdr.source(
             args="hackrf=0000000000000000325866e6299d8023")
         self.sdr_source.set_sample_rate(self.sample_rate)
-        self.sdr_source.set_center_freq(self.center_f)
+        self.sdr_source.set_center_freq(self.rf_fc)
         self.sdr_source.set_freq_corr(0, 0)
         self.sdr_source.set_dc_offset_mode(0, 0)
         self.sdr_source.set_iq_balance_mode(0, 0)
