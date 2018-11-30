@@ -28,14 +28,14 @@ class freq_calc(gr.basic_block):
     docstring for block freq_calc
     """
 
-    def __init__(self, sample_rate, f_bandwidth, f_carrier):
+    def __init__(self, f_1, f_0):
         gr.basic_block.__init__(self,
                                 name="freq_calc",
-                                in_sig=[np.float32],
+                                in_sig=[np.int16],
                                 out_sig=[np.float32])
 
-        self.w_b = f_bandwidth * np.pi
-        self.w_c = f_carrier * np.pi * 2
+        self.w_1 = np.pi * 2 * f_1
+        self.w_0 = np.pi * 2 * f_0
 
     def forecast(self, noutput_items, ninput_items_required):
         # setup size of input_items[i] for work call
@@ -43,6 +43,6 @@ class freq_calc(gr.basic_block):
             ninput_items_required[i] = noutput_items
 
     def general_work(self, input_items, output_items):
-        output_items[0][:] = input_items[0][:len(output_items[0])] * self.w_b + self.w_c
+        output_items[0][:] = np.where(input_items[0][:len(output_items[0])] > 0, self.w_1, self.w_0)
         self.consume(0, len(output_items[0]))
         return len(output_items[0])

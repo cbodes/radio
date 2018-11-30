@@ -52,6 +52,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
     "/home/cam/radio/gr-MyRadio/grc/MyRadio_freq_calc.xml"
     "/home/cam/radio/gr-MyRadio/grc/MyRadio_time_calc.xml"
     "/home/cam/radio/gr-MyRadio/grc/MyRadio_fm_multiply.xml"
+    "/home/cam/radio/gr-MyRadio/grc/MyRadio_bitconv.xml"
     )
 endif()
 

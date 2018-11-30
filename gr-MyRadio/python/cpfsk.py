@@ -34,7 +34,7 @@ class cpfsk(gr.basic_block):
     def __init__(self, sample_rate):
         gr.basic_block.__init__(self,
                                 name="cpfsk",
-                                in_sig=[np.float32, np.float32],
+                                in_sig=[np.float32],
                                 out_sig=[np.complex64])
         self.tstep = 1. / sample_rate
         self.times = np.arange(0, self.tstep * 16384, self.tstep, dtype=np.float64)
@@ -47,12 +47,11 @@ class cpfsk(gr.basic_block):
 
     def general_work(self, input_items, output_items):
         in0 = input_items[0][:len(output_items[0])]
-        in1 = input_items[1][:len(output_items[0])]
-        output_items[0][:] = self.amplitude * np.exp(1j * (in0 * self.times[:len(output_items[0])] + in1))
+        output_items[0][:] = self.amplitude * np.exp(1j * (in0 * self.times[:len(output_items[0])]))
         curT = self.times[len(output_items[0])-1] + self.tstep
+        #self.data = np.append(self.data, output_items[0])
         self.times += curT - self.times[0]
         self.consume(0, len(output_items[0]))
-        self.consume(1, len(output_items[0]))
         return len(output_items[0])
 
 

@@ -53,6 +53,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
     "/home/cam/radio/gr-MyRadio/python/freq_calc.py"
     "/home/cam/radio/gr-MyRadio/python/time_calc.py"
     "/home/cam/radio/gr-MyRadio/python/fm_multiply.py"
+    "/home/cam/radio/gr-MyRadio/python/bitconv.py"
     )
 endif()
 
@@ -72,6 +73,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
     "/home/cam/radio/gr-MyRadio/build/python/freq_calc.pyc"
     "/home/cam/radio/gr-MyRadio/build/python/time_calc.pyc"
     "/home/cam/radio/gr-MyRadio/build/python/fm_multiply.pyc"
+    "/home/cam/radio/gr-MyRadio/build/python/bitconv.pyc"
     "/home/cam/radio/gr-MyRadio/build/python/__init__.pyo"
     "/home/cam/radio/gr-MyRadio/build/python/rrc_filter.pyo"
     "/home/cam/radio/gr-MyRadio/build/python/cpfsk.pyo"
@@ -86,6 +88,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
     "/home/cam/radio/gr-MyRadio/build/python/freq_calc.pyo"
     "/home/cam/radio/gr-MyRadio/build/python/time_calc.pyo"
     "/home/cam/radio/gr-MyRadio/build/python/fm_multiply.pyo"
+    "/home/cam/radio/gr-MyRadio/build/python/bitconv.pyo"
     )
 endif()
 

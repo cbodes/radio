@@ -29,5 +29,6 @@ install(FILES
     MyRadio_phase_calc.xml
     MyRadio_freq_calc.xml
     MyRadio_time_calc.xml
-    MyRadio_fm_multiply.xml DESTINATION share/gnuradio/grc/blocks
+    MyRadio_fm_multiply.xml
+    MyRadio_bitconv.xml DESTINATION share/gnuradio/grc/blocks
 )

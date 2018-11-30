@@ -56,6 +56,18 @@ CMAKE_BINARY_DIR = /home/cam/radio/gr-MyRadio/build
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
+
+# Special rule for the target install/strip
+install/strip/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip/fast
+
 # Special rule for the target install/local
 install/local: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
@@ -78,18 +90,6 @@ test:
 test/fast: test
 
 .PHONY : test/fast
-
-# Special rule for the target install/strip
-install/strip: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
-	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
-.PHONY : install/strip
-
-# Special rule for the target install/strip
-install/strip/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
-	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
-.PHONY : install/strip/fast
 
 # Special rule for the target list_install_components
 list_install_components:
@@ -168,19 +168,19 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-python/CMakeFiles/pygen_python_21cdf.dir/rule:
-	cd /home/cam/radio/gr-MyRadio/build && $(MAKE) -f CMakeFiles/Makefile2 python/CMakeFiles/pygen_python_21cdf.dir/rule
-.PHONY : python/CMakeFiles/pygen_python_21cdf.dir/rule
+python/CMakeFiles/pygen_python_210b3.dir/rule:
+	cd /home/cam/radio/gr-MyRadio/build && $(MAKE) -f CMakeFiles/Makefile2 python/CMakeFiles/pygen_python_210b3.dir/rule
+.PHONY : python/CMakeFiles/pygen_python_210b3.dir/rule
 
 # Convenience name for target.
-pygen_python_21cdf: python/CMakeFiles/pygen_python_21cdf.dir/rule
+pygen_python_210b3: python/CMakeFiles/pygen_python_210b3.dir/rule
 
-.PHONY : pygen_python_21cdf
+.PHONY : pygen_python_210b3
 
 # fast build rule for target.
-pygen_python_21cdf/fast:
-	cd /home/cam/radio/gr-MyRadio/build && $(MAKE) -f python/CMakeFiles/pygen_python_21cdf.dir/build.make python/CMakeFiles/pygen_python_21cdf.dir/build
-.PHONY : pygen_python_21cdf/fast
+pygen_python_210b3/fast:
+	cd /home/cam/radio/gr-MyRadio/build && $(MAKE) -f python/CMakeFiles/pygen_python_210b3.dir/build.make python/CMakeFiles/pygen_python_210b3.dir/build
+.PHONY : pygen_python_210b3/fast
 
 # Help Target
 help:
@@ -188,10 +188,10 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... install/strip"
 	@echo "... install/local"
 	@echo "... test"
-	@echo "... install/strip"
-	@echo "... pygen_python_21cdf"
+	@echo "... pygen_python_210b3"
 	@echo "... list_install_components"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"

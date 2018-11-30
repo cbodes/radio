@@ -17,3 +17,4 @@ add_test(qa_phase_calc "/bin/sh" "/home/cam/radio/gr-MyRadio/build/python/qa_pha
 add_test(qa_freq_calc "/bin/sh" "/home/cam/radio/gr-MyRadio/build/python/qa_freq_calc_test.sh")
 add_test(qa_time_calc "/bin/sh" "/home/cam/radio/gr-MyRadio/build/python/qa_time_calc_test.sh")
 add_test(qa_fm_multiply "/bin/sh" "/home/cam/radio/gr-MyRadio/build/python/qa_fm_multiply_test.sh")
+add_test(qa_bitconv "/bin/sh" "/home/cam/radio/gr-MyRadio/build/python/qa_bitconv_test.sh")

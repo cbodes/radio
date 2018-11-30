@@ -43,7 +43,8 @@ GR_PYTHON_INSTALL(
     phase_calc.py
     freq_calc.py
     time_calc.py
-    fm_multiply.py DESTINATION ${GR_PYTHON_DIR}/MyRadio
+    fm_multiply.py
+    bitconv.py DESTINATION ${GR_PYTHON_DIR}/MyRadio
 )
 
 ########################################################################
@@ -66,3 +67,4 @@ GR_ADD_TEST(qa_phase_calc ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_ph
 GR_ADD_TEST(qa_freq_calc ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_freq_calc.py)
 GR_ADD_TEST(qa_time_calc ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_time_calc.py)
 GR_ADD_TEST(qa_fm_multiply ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_fm_multiply.py)
+GR_ADD_TEST(qa_bitconv ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_bitconv.py)

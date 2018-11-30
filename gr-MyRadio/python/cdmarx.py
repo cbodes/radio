@@ -37,6 +37,6 @@ class cdmarx(gr.basic_block):
 
     def general_work(self, input_items, output_items):
         in0 = input_items[0]
-       # print in0
+        print in0
         self.consume_each(len(in0))
         return 0
