@@ -19,13 +19,14 @@ class MyRadio (gr.top_block):
     def __init__(self):
         gr.top_block .__init__(self, "TEST")
 
-        bitstream = [1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1]
-        self.bitstream = bitstream
+        self.packet_header = [1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1]
+        messageData = [0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1]
+        self.bitstream = np.concatenate((self.packet_header, messageData))
         self.cdma_code = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
                           1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
         self.sample_rate = 10e6
         self.bit_width = .001
-        self.freq_1 = 1 / self.bit_width * 50
+        self.freq_1 = 1 / self.bit_width * 25
         self.freq_0 = 1 / self.bit_width * 1
         self.bandwidth = self.freq_1 - self.freq_0
         self.rf_fc = 915e6-self.freq_0
@@ -48,6 +49,8 @@ class MyRadio (gr.top_block):
             args="hackrf=0000000000000000325866e629758723")
         self.sdr_sink.set_sample_rate(self.sample_rate)
         self.sdr_sink.set_center_freq(self.rf_fc)
+        self.sdr_sink.set_gain(14, 0)
+        self.sdr_sink.set_if_gain(47, 0)
 
         self.file_sink = blocks.file_sink(8, "output.txt")
 
@@ -71,7 +74,7 @@ class MyRadio (gr.top_block):
         Rs = 1
         fftsize = 2048
         self.qapp = QtWidgets.QApplication(sys.argv)
-        self.qtsnk = qtgui.sink_c(fftsize, 5, self.rf_fc, self.bandwidth * 2, "Complex Signal Example",
+        self.qtsnk = qtgui.sink_c(fftsize, 5, self.rf_fc, self.bandwidth * 2, "Transmitter Plots",
                                   True, True, True, True)
 
         self.time_sink = qtgui.time_sink_c(2000, self.sample_rate, "Time")
@@ -81,15 +84,11 @@ class MyRadio (gr.top_block):
         self.connect(self.repeater, self.freq_calc)
         self.connect(self.freq_calc, self.cpfsk_mod)
         self.connect(self.cpfsk_mod, self.thr)
-        self.connect(self.thr, self.time_sink)
         self.connect(self.thr, self.qtsnk)
         self.connect(self.thr, self.sdr_sink)
 
         pyWin1 = sip.wrapinstance(self.qtsnk.pyqwidget(), QtWidgets.QWidget)
         pyWin1.show()
-        pyWin2 = sip.wrapinstance(
-            self.time_sink.pyqwidget(), QtWidgets.QWidget)
-        pyWin2.show()
 
     def getResultData(self):
         return self.encoded_data

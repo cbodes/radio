@@ -29,14 +29,28 @@ class cdmarx(gr.basic_block):
     """
     data = []
 
-    def __init__(self):
+    def __init__(self, packet_header, expected):
         gr.basic_block.__init__(self,
                                 name="cdmarx",
                                 in_sig=[np.int8],
                                 out_sig=None)
+        self.packet_header = packet_header
+        self.printData = -1
+        self.data = []
+        self.messageData = []
+        self.expected = expected
 
     def general_work(self, input_items, output_items):
-        in0 = input_items[0]
-        print in0
-        self.consume_each(len(in0))
+        in0 = input_items[0][0]
+        self.consume_each(1)
+        self.data.append(in0)
+        if self.printData >= 0 and self.printData <= 15:
+            self.messageData.append(in0)
+            self.printData += 1
+            return 0
+        
+        if (self.data[-1 * len(self.packet_header):] == self.packet_header):
+            print self.messageData
+            self.messageData = []
+            self.printData = 0
         return 0

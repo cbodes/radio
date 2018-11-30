@@ -20,11 +20,12 @@ class MyRadio (gr.top_block):
     def __init__(self):
         gr.top_block .__init__(self, "TEST")
 
+        self.packet_header = [1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1]
         self.cdma_code = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
                           1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
         self.sample_rate = 20e6
         self.bit_width = .001
-        self.freq_1 = 1 / self.bit_width * 50
+        self.freq_1 = 1 / self.bit_width * 25
         self.freq_0 = 1 / self.bit_width * 1
         self.bandwidth = self.freq_1 - self.freq_0
         self.mod_fc = self.bandwidth
@@ -47,7 +48,7 @@ class MyRadio (gr.top_block):
         self.lp_filt1 = filter.fir_filter_ccf(
             int(self.sample_rate / self.mod_rate), self.lp_taps1)
 
-        self.rx_test = cdmarx()
+        self.rx_test = cdmarx(self.packet_header)
 
         self.sdr_source = osmosdr.source(
             args="hackrf=0000000000000000325866e6299d8023")
@@ -84,6 +85,8 @@ class MyRadio (gr.top_block):
         self.sumstack1b = blocks.stream_to_vector(4, self.samples_per_symbol)
         self.sumstack0a = blocks.stream_to_vector(4, self.samples_per_symbol)
         self.sumstack0b = blocks.stream_to_vector(4, self.samples_per_symbol)
+
+        self.dataStack = blocks.stream_to_vector(1, 5)
 
         self.cdma_decode = cdma_decode(self.cdma_code)
 
