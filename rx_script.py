@@ -47,10 +47,10 @@ class MyRadio (gr.top_block):
         self.lp_filt1 = filter.fir_filter_ccf(
             int(self.sample_rate / self.mod_rate), self.lp_taps1)
 
-        self.rx_test = cdmarx()
+        self.rx_test = cdmarx([0, 1, 1, 1, 1])
 
         self.sdr_source = osmosdr.source(
-            args="hackrf=0000000000000000325866e6299d8023")
+            args="hackrf=0000000000000000325866e629758723")
         self.sdr_source.set_sample_rate(self.sample_rate)
         self.sdr_source.set_center_freq(self.rf_fc)
         self.sdr_source.set_freq_corr(0, 0)

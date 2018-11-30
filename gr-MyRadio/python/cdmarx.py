@@ -29,14 +29,25 @@ class cdmarx(gr.basic_block):
     """
     data = []
 
-    def __init__(self):
+    def __init__(self, cdmaCode):
         gr.basic_block.__init__(self,
                                 name="cdmarx",
                                 in_sig=[np.int8],
                                 out_sig=None)
+        self.cdma_code = np.tile(cdmaCode, 4096)
+        self.total_errors = 0
+        self.total_samples = 0
 
     def general_work(self, input_items, output_items):
         in0 = input_items[0]
+        curMax = np.sum(np.logical_and(in0, self.cdma_code[:len(in0)]))
+        for i in range(1, 5, 1):
+            curSum = np.sum(np.logical_and(in0, self.cdma_code[i:i+len(in0)]))
+            if (curSum < curMax):
+                curMax = curSum
+        self.total_errors += len(in0) - curMax
+        self.total_samples += len(in0)
+        #print self.total_errors / self.total_samples
         print in0
         self.consume_each(len(in0))
         return 0

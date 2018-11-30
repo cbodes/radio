@@ -48,6 +48,8 @@ class MyRadio (gr.top_block):
             args="hackrf=0000000000000000325866e629758723")
         self.sdr_sink.set_sample_rate(self.sample_rate)
         self.sdr_sink.set_center_freq(self.rf_fc)
+        self.sdr_sink.set_gain(14, 0)
+        self.sdr_sink.set_if_gain(47, 0)
 
         self.file_sink = blocks.file_sink(8, "output.txt")
 
