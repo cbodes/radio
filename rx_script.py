@@ -51,7 +51,7 @@ class MyRadio (gr.top_block):
         self.rx_test = cdmarx(self.packet_header)
 
         self.sdr_source = osmosdr.source(
-            args="hackrf=0000000000000000325866e6299d8023")
+            args="hackrf=0000000000000000325866e629758723")
         self.sdr_source.set_sample_rate(self.sample_rate)
         self.sdr_source.set_center_freq(self.rf_fc)
         self.sdr_source.set_freq_corr(0, 0)

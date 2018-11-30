@@ -57,11 +57,3 @@
 /home/cam/radio/gr-MyRadio/build/docs/CMakeFiles/install/local.dir
 /home/cam/radio/gr-MyRadio/build/docs/CMakeFiles/rebuild_cache.dir
 /home/cam/radio/gr-MyRadio/build/docs/CMakeFiles/install.dir
-/home/cam/radio/gr-MyRadio/build/docs/doxygen/CMakeFiles/install/local.dir
-/home/cam/radio/gr-MyRadio/build/docs/doxygen/CMakeFiles/test.dir
-/home/cam/radio/gr-MyRadio/build/docs/doxygen/CMakeFiles/list_install_components.dir
-/home/cam/radio/gr-MyRadio/build/docs/doxygen/CMakeFiles/install/strip.dir
-/home/cam/radio/gr-MyRadio/build/docs/doxygen/CMakeFiles/doxygen_target.dir
-/home/cam/radio/gr-MyRadio/build/docs/doxygen/CMakeFiles/edit_cache.dir
-/home/cam/radio/gr-MyRadio/build/docs/doxygen/CMakeFiles/rebuild_cache.dir
-/home/cam/radio/gr-MyRadio/build/docs/doxygen/CMakeFiles/install.dir
