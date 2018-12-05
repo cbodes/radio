@@ -17,15 +17,14 @@ import sip
 
 
 class MyRadio (gr.top_block):
-    def __init__(self):
+    def __init__(self, cdma_length):
         gr.top_block .__init__(self, "TEST")
-
+        self.expected = [0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1]
         self.packet_header = [1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1]
-        self.cdma_code = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
-                          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        self.cdma_code = np.repeat(1, cdma_length)
         self.sample_rate = 20e6
         self.bit_width = .001
-        self.freq_1 = 1 / self.bit_width * 25
+        self.freq_1 = 1 / self.bit_width * 50
         self.freq_0 = 1 / self.bit_width * 1
         self.bandwidth = self.freq_1 - self.freq_0
         self.mod_fc = self.bandwidth
@@ -35,7 +34,7 @@ class MyRadio (gr.top_block):
 
         fftsize = 2048
         self.qapp = QtWidgets.QApplication(sys.argv)
-        self.qtsnk = qtgui.sink_c(fftsize, 5, self.rf_fc, self.bandwidth * 2, "Receiver Plots",
+        self.qtsnk = qtgui.sink_c(fftsize, 5, 0, self.mod_rate, "Receiver Plots",
                                   True, True, True, True)
 
         self.conv = blocks.complex_to_float()
@@ -43,15 +42,22 @@ class MyRadio (gr.top_block):
         self.time_sink = qtgui.time_sink_c(2000, self.sample_rate, "Time")
 
         self.lp_taps1 = filter.firdes.low_pass(
-            100, self.sample_rate,  self.freq_1,  10000)
+            10, self.sample_rate,  self.freq_1,  10000)
 
         self.lp_filt1 = filter.fir_filter_ccf(
             int(self.sample_rate / self.mod_rate), self.lp_taps1)
 
-        self.rx_test = cdmarx(self.packet_header)
+
+        self.lp_taps2 = filter.firdes.low_pass(
+            0, self.mod_rate,  self.freq_1,  1000)
+
+        self.lp_filt2 = filter.fir_filter_ccf(
+            1, self.lp_taps2)
+
+        self.rx_test = cdmarx(self.packet_header, self.expected)
 
         self.sdr_source = osmosdr.source(
-            args="hackrf=0000000000000000325866e629758723")
+            args="hackrf=0000000000000000325866e6299d8023")
         self.sdr_source.set_sample_rate(self.sample_rate)
         self.sdr_source.set_center_freq(self.rf_fc)
         self.sdr_source.set_freq_corr(0, 0)
@@ -92,7 +98,7 @@ class MyRadio (gr.top_block):
 
         self.connect(self.sdr_source, self.lp_filt1)
         self.connect(self.lp_filt1, self.conv)
-        self.connect(self.sdr_source, self.qtsnk)
+        self.connect(self.lp_filt1, self.qtsnk)
         self.connect((self.conv, 0), self.fm_multiplyr1)
         self.connect((self.conv, 1), self.fm_multiplyi1)
         self.connect((self.conv, 0), self.fm_multiplyr0)
@@ -126,7 +132,7 @@ class MyRadio (gr.top_block):
 
 
 if __name__ == '__main__':
-    test = MyRadio()
+    test = MyRadio(int(sys.argv[1]))
     edges = test.edge_list()
     test.start()
     test.qapp.exec_()

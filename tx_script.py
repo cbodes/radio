@@ -16,17 +16,16 @@ import sip
 
 
 class MyRadio (gr.top_block):
-    def __init__(self):
+    def __init__(self, cdma_length):
         gr.top_block .__init__(self, "TEST")
 
         self.packet_header = [1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1]
         messageData = [0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1]
         self.bitstream = np.concatenate((self.packet_header, messageData))
-        self.cdma_code = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
-                          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-        self.sample_rate = 10e6
+        self.cdma_code = np.repeat(1, cdma_length)
+        self.sample_rate = 5e6
         self.bit_width = .001
-        self.freq_1 = 1 / self.bit_width * 25
+        self.freq_1 = 1 / self.bit_width * 50
         self.freq_0 = 1 / self.bit_width * 1
         self.bandwidth = self.freq_1 - self.freq_0
         self.rf_fc = 915e6-self.freq_0
@@ -37,13 +36,12 @@ class MyRadio (gr.top_block):
         self.msg_gen = MessageGen(self.cdma_code)
         self.encoded_data = self.msg_gen.gen_message_from_raw(self.bitstream)
 
-        self.rrc_taps = filter.firdes.root_raised_cosine(
-            self.samples_per_symbol, self.samples_per_symbol, 1, .5, int(20 * self.samples_per_symbol))
+        # self.rrc_taps = filter.firdes.root_raised_cosine(
+        #     self.samples_per_symbol, self.samples_per_symbol, 1, .5, int(20 * self.samples_per_symbol))
 
-        self.rrc_filt = filter.interp_fir_filter_fff(
-            int(self.samples_per_symbol), self.rrc_taps)
+        # self.rrc_filt = filter.interp_fir_filter_fff(
+        #     int(self.samples_per_symbol), self.rrc_taps)
 
-        self.short_to_float = blocks.short_to_float()
 
         self.sdr_sink = osmosdr.sink(
             args="hackrf=0000000000000000325866e629758723")
@@ -65,19 +63,14 @@ class MyRadio (gr.top_block):
 
         self.thr = blocks.throttle(gr.sizeof_gr_complex, self.sample_rate)
 
-        self.conv = blocks.complex_to_float()
-
         self.freq_calc = freq_calc(self.freq_1, self.freq_0)
-
-        self.phase_calc = phase_calc(self.sample_rate)
 
         Rs = 1
         fftsize = 2048
         self.qapp = QtWidgets.QApplication(sys.argv)
-        self.qtsnk = qtgui.sink_c(fftsize, 5, self.rf_fc, self.bandwidth * 2, "Transmitter Plots",
+        self.qtsnk = qtgui.sink_c(fftsize, 5, self.rf_fc, self.sample_rate * 2, "Transmitter Plots",
                                   True, True, True, True)
 
-        self.time_sink = qtgui.time_sink_c(2000, self.sample_rate, "Time")
 
         self.connect(self.vec_source, self.vec_stream)
         self.connect(self.vec_stream, self.repeater)
@@ -95,7 +88,7 @@ class MyRadio (gr.top_block):
 
 
 if __name__ == '__main__':
-    test = MyRadio()
+    test = MyRadio(int(sys.argv[1]))
     edges = test.edge_list()
     test.start()
     test.qapp.exec_()

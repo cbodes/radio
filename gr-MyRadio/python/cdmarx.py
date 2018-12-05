@@ -38,7 +38,9 @@ class cdmarx(gr.basic_block):
         self.printData = -1
         self.data = []
         self.messageData = []
-        self.expected = expected
+        self.expected = np.array(expected)
+        self.wrong = 0
+        self.numBits = 0
 
     def general_work(self, input_items, output_items):
         in0 = input_items[0][0]
@@ -51,6 +53,11 @@ class cdmarx(gr.basic_block):
         
         if (self.data[-1 * len(self.packet_header):] == self.packet_header):
             print self.messageData
+            self.wrong += (self.expected[:len(self.messageData)] != self.messageData).sum()
+            self.numBits += len(self.messageData)
+            if (self.numBits != 0):
+                ber = float(self.wrong) / float(self.numBits)
+                print "{:0.10f}".format(ber)
             self.messageData = []
             self.printData = 0
         return 0
