@@ -44,7 +44,7 @@ class MyRadio (gr.top_block):
 
 
         self.sdr_sink = osmosdr.sink(
-            args="hackrf=0000000000000000325866e629758723")
+            args="hackrf=0000000000000000325866e6299d8023")
         self.sdr_sink.set_sample_rate(self.sample_rate)
         self.sdr_sink.set_center_freq(self.rf_fc)
         self.sdr_sink.set_gain(14, 0)

@@ -57,7 +57,7 @@ class MyRadio (gr.top_block):
         self.rx_test = cdmarx(self.packet_header, self.expected)
 
         self.sdr_source = osmosdr.source(
-            args="hackrf=0000000000000000325866e6299d8023")
+            args="hackrf=0000000000000000325866e629758723")
         self.sdr_source.set_sample_rate(self.sample_rate)
         self.sdr_source.set_center_freq(self.rf_fc)
         self.sdr_source.set_freq_corr(0, 0)
@@ -66,7 +66,7 @@ class MyRadio (gr.top_block):
         self.sdr_source.set_gain_mode(False, 0)
         self.sdr_source.set_gain(14, 0)
         self.sdr_source.set_if_gain(47, 0)
-        self.sdr_source.set_bb_gain(20, 0)
+        self.sdr_source.set_bb_gain(5, 0)
         self.sdr_source.set_antenna("", 0)
         self.sdr_source.set_bandwidth(0, 0)
 
